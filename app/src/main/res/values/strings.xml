@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AdMob App</string>
+<!--
+    <string name="interstitial_ad_unit_id">ca-app-pub-9017774250533498/3748569248</string>
+-->
+    <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string> <!--Test id-->
+    <string name="app_id">ca-app-pub-9017774250533498~2471394018</string>
+
+    <string name="you_are_in_splash_activity">You Are In Splash Activity</string>
+    <string name="you_are_in_main_activity">You Are In Main Activity</string>
+
+</resources>
