@@ -1,4 +1,4 @@
-package com.prinspipes.admobapp;
+package com.examples.admobapp;
 
 import android.content.Context;
 

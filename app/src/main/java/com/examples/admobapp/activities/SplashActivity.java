@@ -1,14 +1,12 @@
-package com.prinspipes.admobapp.activities;
+package com.examples.admobapp.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,6 +17,7 @@ import com.google.ads.consent.ConsentInfoUpdateListener;
 import com.google.ads.consent.ConsentInformation;
 import com.google.ads.consent.ConsentStatus;
 import com.google.ads.consent.DebugGeography;
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
@@ -26,7 +25,7 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.prinspipes.admobapp.R;
+import com.examples.admobapp.R;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,7 +47,7 @@ public class SplashActivity extends AppCompatActivity {
 
         //loadInterstitialAd();
 
-       /* new Handler().postDelayed(new Runnable() {
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 //mInterstitialAd.show(SplashActivity.this);
@@ -60,7 +59,7 @@ public class SplashActivity extends AppCompatActivity {
                     callMainActivity();
                 }
             }
-        },10000);*/
+        },10000);
     }
 
     public void getConsentStatus(){
@@ -82,8 +81,10 @@ public class SplashActivity extends AppCompatActivity {
                             displayConsentForm();
                             break;
                         case PERSONALIZED:
+                            loadInterstitialAd(true);
                             break;
                         case NON_PERSONALIZED:
+                            loadInterstitialAd(false);
                             break;
                     }
                 } else {
@@ -96,6 +97,7 @@ public class SplashActivity extends AppCompatActivity {
             public void onFailedToUpdateConsentInfo(String errorDescription) {
                 // User's consent status failed to update.
                 Log.e("onFailedToUpdateConsentInfo", errorDescription);
+                loadInterstitialAd(true);
             }
         });
 
@@ -134,8 +136,10 @@ public class SplashActivity extends AppCompatActivity {
 
                         switch (consentStatus){
                             case NON_PERSONALIZED:
+                                loadInterstitialAd(false);
                                 break;
                             case PERSONALIZED:
+                                loadInterstitialAd(true);
                                 break;
                         }
                     }
@@ -143,7 +147,7 @@ public class SplashActivity extends AppCompatActivity {
                     @Override
                     public void onConsentFormError(String errorDescription) {
                         Log.e("onConsentFormError", errorDescription);
-
+                        loadInterstitialAd(true);
                         // Consent form error.
                     }
                 })
@@ -155,9 +159,17 @@ public class SplashActivity extends AppCompatActivity {
         consentForm.load();
     }
 
-    private void loadInterstitialAd() {
+    private void loadInterstitialAd(boolean isPersonlized) {
         MobileAds.initialize(this);
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest;
+        if (isPersonlized) {
+             adRequest = new AdRequest.Builder().build();
+        } else {
+            Bundle bundle = new Bundle();
+            bundle.putString("npa","1");
+            adRequest = new AdRequest.Builder().addNetworkExtrasBundle(AdMobAdapter.class,bundle).build();
+        }
+
         InterstitialAd.load(this, getString(R.string.interstitial_ad_unit_id), adRequest,
                 new InterstitialAdLoadCallback() {
                     @Override

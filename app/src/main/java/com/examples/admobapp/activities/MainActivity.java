@@ -1,10 +1,10 @@
-package com.prinspipes.admobapp.activities;
+package com.examples.admobapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.prinspipes.admobapp.R;
+import com.examples.admobapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
